@@ -1,10 +1,13 @@
+from PyQt5.QtCore import Qt
+
 class Primitive:
-    def __init__(self, position, clickCountMax, color):
+    def __init__(self, position, clickCountMax, color=Qt.black, qPen=None):
         self.position = position
         self.color = color
         self.clickCountMax = clickCountMax
         self.clickCount = 0
         self.canChange = True
+        self.qPen = qPen
 
     def onClick(self, p):
         self.clickCount += 1
@@ -20,6 +23,9 @@ class Primitive:
     def change(self, p):
         pass
 
+    def onRelease(self, p):
+        pass
+
     def onMove(self, p):
-        if self.clickCount < self.clickCountMax:
+        if self.canChange:
             self.change(p)

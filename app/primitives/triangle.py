@@ -4,12 +4,14 @@ from PyQt5.QtGui import *
 
 
 class Triangle(Primitive):
-    def __init__(self, position, color="black"):
-        Primitive.__init__(self, position, 3, color)
+    def __init__(self, position, color, qPen):
+        Primitive.__init__(self, position, 3, color, qPen)
         self.secondPoint = position
         self.thirdPoint = position
 
     def draw(self, canvas):
+        self.qPen.setColor(self.color)
+        canvas.setPen(self.qPen)
         canvas.drawPolygon(QPolygon([
             self.position.toQPoint(),
             self.secondPoint.toQPoint(),

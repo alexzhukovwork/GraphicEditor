@@ -30,6 +30,10 @@ class Field:
         if self.currentObject is not None and self.currentObject.isChange:
             self.currentObject.onClick(p)
 
+    def onRelease(self, p):
+        if self.currentObject is not None and self.currentObject.isChange:
+            self.currentObject.onRelease(p)
+
     def onMove(self, p):
         if self.currentObject is not None and self.currentObject.isChange:
             self.currentObject.onMove(p)

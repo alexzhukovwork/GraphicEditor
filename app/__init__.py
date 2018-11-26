@@ -1,51 +1,110 @@
-from PyQt5.QtWidgets import QWidget, QApplication
-from PyQt5.QtGui import QPainter, QBrush
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5 import *
 import sys
+from widgets.canvas import Canvas
+from widgets.item import Item
+from widgets.item_container import ItemContainer
+from singleton.paint_settings import PaintSettings
 
-from helpers.vertex import Vertex
-from field import Field
-from primitives.circle import Circle
-from primitives.rectangle import Rectangle
-from primitives.triangle import Triangle
 
 def exceptHook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
-class Example(QWidget):
 
+class Window:
     def __init__(self):
-        super().__init__()
-        self.field = Field()
-        self.initUI()
+        self.items = []
+        self.width = QDesktopWidget().availableGeometry().width()
+        self.height = QDesktopWidget().availableGeometry().height()
 
-    def initUI(self):
-        self.setWindowTitle('Brushes')
-        self.setMouseTracking(True)
+        self.win = QWidget()
+        self.win.setStyleSheet("background-color:rgb(200,209,222);")
 
-        self.show()
+        self.canvas = Canvas(
+            self.width * 0.9,
+            self.height
+        )
+        self.canvas.setFocusPolicy(Qt.StrongFocus)
 
-    def paintEvent(self, e):
-        qp = QPainter()
-        qp.begin(self)
-        self.field.draw(qp)
-        qp.end()
+        self.vBox = QHBoxLayout()
+        self.vBox.setGeometry(QRect(0, 0, self.width, self.height))
 
-    def mouseMoveEvent(self, e):
-        self.field.onMove(Vertex(e.x(), e.y()))
-        self.paintEvent(e)
-        self.update()
+        self.vBox.addWidget(self.canvas)
 
-    def mousePressEvent(self, e):
-        if self.field.canCreate():
-            self.field.addObject(Triangle(Vertex(e.x(), e.y())))
+        self.itemContainer = ItemContainer(
+            self.width * 0.1,
+            self.height
+        )
 
-        self.field.onClick(Vertex(e.x(), e.y()))
+        self.vBox.setContentsMargins(10, 10, 10, 50)
+
+        self.vBox.addWidget(self.itemContainer)
+
+        self.initItems()
+        self.itemContainer.setWidgets(
+            *self.items
+        )
+
+        self.win.setLayout(self.vBox)
+        self.win.setWindowTitle("PyQt")
+
+    def onClickItem(self, func):
+        def onClick():
+            for i in self.items:
+                i.setDefaultStyle()
+
+            func()
+
+        return onClick
+
+    def initItems(self):
+        self.items = [
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectRectangle),
+                QtGui.QIcon(QtGui.QPixmap("../resources/rectangle.png"))
+            ),
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectTriangle),
+                QtGui.QIcon(QtGui.QPixmap("../resources/triangle.png"))
+            ),
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectCircle),
+                QtGui.QIcon(QtGui.QPixmap("../resources/circle.png"))
+            ),
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectLine),
+                QtGui.QIcon(QtGui.QPixmap("../resources/line.png"))
+            ),
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectPen),
+                QtGui.QIcon(QtGui.QPixmap("../resources/pen.png"))
+            ),
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectBrush),
+                QtGui.QIcon(QtGui.QPixmap("../resources/brush.png"))
+            ),
+            Item(
+                self.itemContainer.geometry().width() * 0.4, self.itemContainer.geometry().width() * 0.4,
+                self.onClickItem(PaintSettings.selectEraser),
+                QtGui.QIcon(QtGui.QPixmap("../resources/eraser.png"))
+            ),
+        ]
+
+    def show(self):
+        self.win.showMaximized()
 
 
 if __name__ == '__main__':
     sys.excepthook = exceptHook
     app = QApplication(sys.argv)
-    ex = Example()
-    ex.showMaximized()
+    w = Window()
+    w.show()
     sys.exit(app.exec_())

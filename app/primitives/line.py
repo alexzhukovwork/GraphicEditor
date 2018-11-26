@@ -1,21 +1,21 @@
 from primitives.primitive import Primitive
+from helpers.vertex import Vertex
 
 
-class Circle(Primitive):
+class Line(Primitive):
     def __init__(self, position, color, qPen):
         Primitive.__init__(self, position, 2, color, qPen)
-        self.radius = 0
+        self.secondP = position
 
     def draw(self, canvas):
         self.qPen.setColor(self.color)
         canvas.setPen(self.qPen)
-        canvas.drawEllipse(
-            self.position.x - self.radius / 2,
-            self.position.y - self.radius / 2,
-            self.radius,
-            self.radius
+        canvas.drawLine(
+            self.position.x,
+            self.position.y,
+            self.secondP.x,
+            self.secondP.y
         )
 
     def change(self, p):
-        self.radius = self.position.calculateDistance(p)
-
+        self.secondP = p
