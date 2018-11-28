@@ -40,7 +40,7 @@ class Canvas(QFrame):
                 ToolFactory.createPrimitive(
                     PaintSettings.primitiveId,
                     Vertex(e.x(), e.y()),
-                    Qt.black,
+                    PaintSettings.currentColor,
                     self.penFactory.createPen(
                         PaintSettings.penId
                     )

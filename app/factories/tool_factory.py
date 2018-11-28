@@ -4,6 +4,7 @@ from primitives.triangle import Triangle
 from primitives.pen import Pen
 from primitives.line import Line
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 
 class ToolFactory:
     CIRCLE = 1
@@ -16,7 +17,7 @@ class ToolFactory:
     @staticmethod
     def createPrimitive(id, p, color, qPen):
         return {
-            ToolFactory.CIRCLE: Circle(p, color, qPen),
+            ToolFactory.CIRCLE: Circle(p,  color, qPen),
             ToolFactory.RECTANGLE: Rectangle(p, color, qPen),
             ToolFactory.TRIANGLE: Triangle(p, color, qPen),
             ToolFactory.PEN: Pen(p, color, qPen),

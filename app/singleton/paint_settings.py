@@ -1,9 +1,13 @@
 from factories.tool_factory import ToolFactory
 from factories.pen_factory import PenFactory
+from factories.palette_factory import PaletteFactory
+from PyQt5.QtGui import QColor
 
 class PaintSettings:
     primitiveId = ToolFactory.CIRCLE
     penId = PenFactory.SIMPLE_PEN
+    paletteId = PaletteFactory.FIRST
+    currentColor = QColor(0, 0, 0)
 
     @staticmethod
     def selectRectangle():

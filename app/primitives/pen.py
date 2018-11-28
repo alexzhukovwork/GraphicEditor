@@ -2,14 +2,12 @@ from primitives.primitive import Primitive
 
 
 class Pen(Primitive):
-    def __init__(self, position, color, qPen):
-        Primitive.__init__(self, position, -1, color, qPen)
+    def __init__(self, position, color, qPen, qBrush=None):
+        Primitive.__init__(self, position, -1, color, qPen, qBrush)
         self.pixels = []
 
-
     def draw(self, canvas):
-        self.qPen.setColor(self.color)
-        canvas.setPen(self.qPen)
+        Primitive.draw(self, canvas)
 
         len = self.pixels.__len__() - 1
 

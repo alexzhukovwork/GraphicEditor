@@ -3,13 +3,12 @@ from helpers.vertex import Vertex
 
 
 class Line(Primitive):
-    def __init__(self, position, color, qPen):
-        Primitive.__init__(self, position, 2, color, qPen)
+    def __init__(self, position, color, qPen, qBrush=None):
+        Primitive.__init__(self, position, 2, color, qPen, qBrush)
         self.secondP = position
 
     def draw(self, canvas):
-        self.qPen.setColor(self.color)
-        canvas.setPen(self.qPen)
+        Primitive.draw(self, canvas)
         canvas.drawLine(
             self.position.x,
             self.position.y,
