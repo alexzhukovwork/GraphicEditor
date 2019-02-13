@@ -1,5 +1,15 @@
 from PyQt5.QtCore import Qt
 
+"""
+Abstract class for primitives.
+Each child have to have next methods:
+    onClick()
+    isChange()
+    change()
+    onRelease()
+    onMove()
+    draw()
+"""
 class Primitive:
     def __init__(self, position, clickCountMax, color=Qt.black, qPen=None, qBrush=None):
         self.position = position
@@ -36,4 +46,4 @@ class Primitive:
         canvas.setPen(self.qPen)
 
         if self.qBrush is not None:
-            canvas.setBrush()
+            canvas.setBrush(self.qBrush)

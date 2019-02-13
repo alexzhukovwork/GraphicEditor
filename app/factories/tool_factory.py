@@ -6,6 +6,15 @@ from primitives.line import Line
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 
+""" 
+Static class for creating different tool or primitives:
+    Circle,
+    Rectangle,
+    Triangle,
+    Pen,
+    Line,
+    Eraser
+"""
 class ToolFactory:
     CIRCLE = 1
     RECTANGLE = 2
@@ -15,14 +24,14 @@ class ToolFactory:
     ERASER = 6
 
     @staticmethod
-    def createPrimitive(id, p, color, qPen):
+    def createPrimitive(id, p, color, qPen, qBrush):
         return {
-            ToolFactory.CIRCLE: Circle(p,  color, qPen),
-            ToolFactory.RECTANGLE: Rectangle(p, color, qPen),
-            ToolFactory.TRIANGLE: Triangle(p, color, qPen),
-            ToolFactory.PEN: Pen(p, color, qPen),
-            ToolFactory.LINE: Line(p, color, qPen),
-            ToolFactory.ERASER: Pen(p, Qt.white, qPen)
+            ToolFactory.CIRCLE: Circle(p,  color, qPen, qBrush),
+            ToolFactory.RECTANGLE: Rectangle(p, color, qPen, qBrush),
+            ToolFactory.TRIANGLE: Triangle(p, color, qPen, qBrush),
+            ToolFactory.PEN: Pen(p, color, qPen, qBrush),
+            ToolFactory.LINE: Line(p, color, qPen, qBrush),
+            ToolFactory.ERASER: Pen(p, Qt.white, qPen, qBrush)
         }[id]
 
 

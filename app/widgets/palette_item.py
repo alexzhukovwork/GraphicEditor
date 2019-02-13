@@ -1,13 +1,14 @@
-from widgets.item import Item
+from widgets.widget_item import WidgetItem
 from PyQt5.QtCore import QEvent
 from PyQt5.QtGui import QColor
-from singleton.paint_settings import PaintSettings
+from factories.paint_settings import PaintSettings
 
-class PaletteItem(Item):
+"""Class provides layout for palette items on panel"""
+class PaletteItem(WidgetItem):
     currentColor = QColor(0, 0, 0)
 
     def __init__(self, width, height, onClick, color, main=None):
-        Item.__init__(self, width, height, onClick)
+        WidgetItem.__init__(self, width, height, onClick)
         self.color = color
         self.main = main
         self.__setStyle()
@@ -21,7 +22,7 @@ class PaletteItem(Item):
             if event.type() == QEvent.HoverLeave:
                 self.__setStyle()
 
-        return Item.eventFilter(self, qobject, event)
+        return WidgetItem.eventFilter(self, qobject, event)
 
     def __setStyle(self):
         style = "border:5px solid rgb(200,209,222); background-color:rgba{};"\

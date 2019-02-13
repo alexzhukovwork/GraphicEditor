@@ -3,7 +3,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import *
 
-class Item(QPushButton):
+"""Item which contains in ItemContainer"""
+class WidgetItem(QPushButton):
 
     def __init__(self, width, height, onClick, icon=None):
         super().__init__()
@@ -30,8 +31,11 @@ class Item(QPushButton):
     def setDefaultStyle(self):
         self.setStyleSheet("border:5px solid rgb(200,209,222); padding: 10px;")
 
+    def setClickStyle(self):
+        self.setStyleSheet("border:5px solid rgb(0,255,0); padding: 10px;")
+
     def onClickEvent(self):
         self.onClick()
-        self.setStyleSheet("border:5px solid rgb(0,255,0); padding: 10px;")
+        self.setClickStyle()
 
 

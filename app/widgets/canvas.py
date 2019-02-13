@@ -4,18 +4,19 @@ from PyQt5.QtCore import *
 from PyQt5 import *
 from helpers.vertex import Vertex
 from field import Field
-from singleton.paint_settings import PaintSettings
+from factories.paint_settings import PaintSettings
 from factories.pen_factory import PenFactory
 from factories.tool_factory import ToolFactory
+from eye_tracker.mouse_emulator import MouseEmulator
 
-
+"""Class provides area for painting"""
 class Canvas(QFrame):
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, mainWindow):
         super().__init__()
+        self.mainWindow = mainWindow
         self.field = Field()
         self.initUI(width, height)
-        self.penFactory = PenFactory()
 
     def initUI(self, width, height):
         self.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -30,48 +31,47 @@ class Canvas(QFrame):
         qp.end()
 
     def mouseMoveEvent(self, e):
+        MouseEmulator.mouseMoveEventCanvas(e, self.mainWindow)
         self.field.onMove(Vertex(e.x(), e.y()))
         self.paintEvent(e)
         self.update()
 
     def mousePressEvent(self, e):
+
         if self.field.canCreate():
-            self.field.addObject(
+            primitiveId = PaintSettings.primitiveId
+            color = PaintSettings.currentColor
+            color.setAlpha(PaintSettings.currentAlpha)
+            point = Vertex(e.x(), e.y())
+            pen = PenFactory.createPen(PaintSettings.penId)
+            brush = self._createBrush(e)
+
+            primitive = \
                 ToolFactory.createPrimitive(
-                    PaintSettings.primitiveId,
-                    Vertex(e.x(), e.y()),
-                    PaintSettings.currentColor,
-                    self.penFactory.createPen(
-                        PaintSettings.penId
-                    )
+                    primitiveId,
+                    point,
+                    color,
+                    pen,
+                    brush
                 )
+
+            self.field.addObject(
+                primitive
             )
 
         self.field.onClick(Vertex(e.x(), e.y()))
 
+    @staticmethod
+    def _createBrush(e):
+        if e.button() == Qt.LeftButton:
+            brush = QBrush()
+            brush.setStyle(Qt.NoBrush)
+        elif e.button() == Qt.RightButton:
+            brush = QBrush(PaintSettings.currentColor)
+
+        return brush
+
     def mouseReleaseEvent(self, e):
         self.field.onRelease(Vertex(e.x(), e.y()))
 
-    def keyPressEvent(self, event):
-        id = self.getId(event.key())
-
-        if id is not None:
-            if id < 10:
-                self.primitiveId = id
-            else:
-                self.penId = id
-
-    @staticmethod
-    def getId(key):
-        d = {
-            QtCore.Qt.Key_1: ToolFactory.CIRCLE,
-            QtCore.Qt.Key_2: ToolFactory.RECTANGLE,
-            QtCore.Qt.Key_3: ToolFactory.TRIANGLE,
-            QtCore.Qt.Key_4: ToolFactory.PEN,
-            QtCore.Qt.Key_Q: PenFactory.SIMPLE_PEN,
-            QtCore.Qt.Key_W: PenFactory.WIDTH_PEN,
-        }
-
-        if d.__contains__(key):
-            return d[key]
 

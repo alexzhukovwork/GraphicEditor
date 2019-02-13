@@ -1,26 +1,35 @@
 from PyQt5.QtGui import QPen, QBrush
 from PyQt5.QtCore import Qt
 
+"""
+Static class for creating pen:
+    Thin pen,
+    Width pen
+"""
 class PenFactory:
     SIMPLE_PEN = 10
     WIDTH_PEN = 11
 
-    def __init__(self):
-        self.__createSimplePen()
-        self.__createWidthPen()
+    @staticmethod
+    def createPen(id):
+        if id == PenFactory.SIMPLE_PEN:
+            pen = PenFactory.__createSimplePen()
+        elif id == PenFactory.WIDTH_PEN:
+            pen = PenFactory.__createWidthPen()
 
-    def createPen(self, id):
-        return {
-            PenFactory.SIMPLE_PEN: self.simplePen,
-            PenFactory.WIDTH_PEN: self.widthPen,
-        }[id]
+        return pen
 
-    def __createSimplePen(self):
-        self.simplePen = QPen()
-        self.simplePen.setWidth(1)
 
-    def __createWidthPen(self):
-        self.widthPen = QPen()
-        self.widthPen.setWidth(5)
-        self.widthPen.setCapStyle(Qt.RoundCap)
+    @staticmethod
+    def __createSimplePen():
+        pen = QPen()
+        pen.setWidth(1)
+        return pen
+
+    @staticmethod
+    def __createWidthPen():
+        pen = QPen()
+        pen.setWidth(5)
+        pen.setCapStyle(Qt.RoundCap)
+        return pen
 

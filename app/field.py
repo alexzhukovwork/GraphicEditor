@@ -1,6 +1,6 @@
 from exceptions.objects_count_error import ObjectsCountError
 
-
+"""Class contains all primitives which are on the canvas"""
 class Field:
     def __init__(self):
         self.objects = []

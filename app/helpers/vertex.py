@@ -1,10 +1,16 @@
 import math
 from PyQt5.QtCore import *
 
-class Vertex():
+class Vertex:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
 
     def toQPoint(self):
         return QPoint(self.x, self.y)

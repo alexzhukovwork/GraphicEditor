@@ -1,5 +1,6 @@
 from PyQt5.QtGui import QColor
 
+"""Static class for creating different palettes"""
 class PaletteFactory:
 
     FIRST = 1
@@ -7,8 +8,6 @@ class PaletteFactory:
     THIRD = 3
     FIFTH = 4
     SIXTH = 5
-
-   # currentPalette = PaletteFactory.createPalette(PaletteFactory.FIRST)
 
     def __init__(self):
         pass
