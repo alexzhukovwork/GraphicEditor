@@ -6,11 +6,12 @@ from PyQt5 import *
 """Item which contains in ItemContainer"""
 class WidgetItem(QPushButton):
 
-    def __init__(self, width, height, onClick, icon=None):
+    def __init__(self, width, height, onClick, icon=None, isFileTool=False):
         super().__init__()
 
         self.w = width
         self.h = height
+        self.isFileTool = isFileTool
         self.__initUI()
         self.onClick = onClick
         self.clicked.connect(self.onClickEvent)
@@ -26,7 +27,10 @@ class WidgetItem(QPushButton):
         self.__setStyle()
 
     def __setStyle(self):
-        self.setStyleSheet("border:5px solid rgb(200,209,222); padding: 10px;")
+        if not self.isFileTool:
+            self.setStyleSheet("border:5px solid rgb(200,209,222); padding: 10px;")
+        else:
+            self.setStyleSheet("border:5px solid rgb(0,0,0); padding: 10px;")
 
     def setDefaultStyle(self):
         self.setStyleSheet("border:5px solid rgb(200,209,222); padding: 10px;")
@@ -36,6 +40,8 @@ class WidgetItem(QPushButton):
 
     def onClickEvent(self):
         self.onClick()
-        self.setClickStyle()
+
+        if not self.isFileTool:
+            self.setClickStyle()
 
 

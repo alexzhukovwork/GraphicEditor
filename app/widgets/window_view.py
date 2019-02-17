@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import *
+from PyQt5 import QtWidgets
+import sys
 
 from factories.paint_settings import PaintSettings
 from factories.palette_factory import PaletteFactory
@@ -13,13 +15,15 @@ from widgets.item_container import ItemContainer
 from eye_tracker.mouse_emulator import MouseEmulator
 
 """Main Window"""
-class WindowView:
+class WindowView(QMainWindow):
     def __init__(self, width, height):
+        QMainWindow.__init__(self, flags=Qt.Window)
         self.width = width
         self.height = height
         self.win = QWidget()
         self.widgetItems = []
         self.__setupWindow()
+        self.image = None
 
     def setupFirstCursor(self):
         pm = QtGui.QPixmap('../resources/cursorRedCircle.png')
@@ -43,7 +47,8 @@ class WindowView:
         self.win.setStyleSheet("background-color:rgb(200,209,222);")
         self.win.setWindowTitle("PyQt")
 
-        self.tools = self.__createTools(self.width * 0.04)
+        self.tools = self.__createTools(self.width * 0.03)
+        self.fileTools = self.__createFileTools(self.width * 0.03)
         toolContainerWidth = self.width * 0.07
         toolContainerHeight = self.height
 
@@ -90,9 +95,11 @@ class WindowView:
         colorLayout = self.__createToolContainer(
             QHBoxLayout(),
             toolContainerWidth,
-            toolContainerWidth * 2,
+            toolContainerWidth,
             [colorLayoutFirstColumn, colorLayoutSecondColumn]
         )
+
+        self.canvas = self.__createCanvas(self.width * 0.93, self.height)
 
         mainLayout = self.__createBox(
             QHBoxLayout(),
@@ -100,14 +107,15 @@ class WindowView:
             0,
             self.width,
             self.height,
-            (10, 10, 10, 50),
+            (10, 10, 10, 30),
             [
-                self.__createCanvas(self.width * 0.93, self.height),
+                self.canvas,
                 self.__createToolContainer(
                     QVBoxLayout(),
                     toolContainerWidth,
                     toolContainerHeight,
-                    self.tools + [colorCurrentContainer, colorLayout]
+                    self.tools + [colorCurrentContainer] + [colorLayout] + self.fileTools,
+
                 )
             ]
         )
@@ -145,7 +153,7 @@ class WindowView:
             self
         )
 
-        layout.setContentsMargins(0, 10, 0, 0)
+        layout.setContentsMargins(0, 10, 0, 30)
 
         toolContainer.setWidgets(
             layout,
@@ -153,6 +161,22 @@ class WindowView:
         )
 
         return toolContainer
+
+    def __createSliderContainer(self, layout, width, height, margins, tools):
+        sliderContainer = ItemContainer(
+            width,
+            height,
+            self
+        )
+
+        layout.setContentsMargins(*margins)
+
+        sliderContainer.setWidgets(
+            layout,
+            tools
+        )
+
+        return sliderContainer
 
     def __createTools(self, size):
         tools = [
@@ -191,10 +215,52 @@ class WindowView:
                 self.onClickItem(PaintSettings.selectEraser),
                 QtGui.QIcon(QtGui.QPixmap("../resources/eraser.png"))
             ),
+
         ]
 
         tools[0].setClickStyle()
 
         return tools
 
+    def __createFileTools(self, size):
+        tools = [
+            WidgetItem(
+                size, size,
+                self.saveImage,
+                QtGui.QIcon(QtGui.QPixmap("../resources/save.png")),
+                True
+            ),
+            WidgetItem(
+                size, size,
+                self.openFileNameDialog,
+                QtGui.QIcon(QtGui.QPixmap("../resources/open.png")),
+                True
+            ),
+        ]
+
+        return tools
+
+    def openFileNameDialog(self):
+        options = QFileDialog.Options()
+
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
+                                                  "Image Files (*.png *.jpg *.bmp)", options=options)
+        if fileName:
+            print(fileName)
+            self.canvas.clearImage()
+            self.image = QImage(fileName)
+
+    def saveImage(self):
+        options = QFileDialog.Options()
+
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(self, "QFileDialog.getSaveFileName()", "",
+                                                  "Image Files (*.png *.jpg *.bmp)", options=options)
+        if fileName:
+            print(fileName)
+            if ".png" not in fileName:
+                fileName += ".png"
+
+            self.canvas.saveCanvas(fileName)
 

@@ -41,7 +41,8 @@ class Primitive:
         if self.canChange:
             self.change(p)
 
-    def draw(self, canvas):
+    def draw(self, canvas, alpha):
+        self.color.setAlpha(alpha)
         self.qPen.setColor(self.color)
         canvas.setPen(self.qPen)
 

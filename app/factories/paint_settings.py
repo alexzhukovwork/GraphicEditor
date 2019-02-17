@@ -2,6 +2,8 @@ from factories.tool_factory import ToolFactory
 from factories.pen_factory import PenFactory
 from factories.palette_factory import PaletteFactory
 from PyQt5.QtGui import QColor
+import datetime
+import threading
 
 """
 Static class for management paint settings
@@ -15,6 +17,24 @@ class PaintSettings:
     paletteId = PaletteFactory.FIRST
     currentColor = QColor(0, 0, 0)
     currentAlpha = 255
+
+    @staticmethod
+    def setAlpha(alpha):
+        PaintSettings.currentAlpha = alpha
+
+    @staticmethod
+    def printAlpha():
+        f = open("Alpha.txt", "a+")
+        f.write("Date: "
+            + str(datetime.datetime.now().day)
+            + "."
+            + str(datetime.datetime.now().month)
+            + "."
+            + str(datetime.datetime.now().year)
+            + " Time: "
+            + str(datetime.datetime.now().time())
+            + " alpha: " + str(PaintSettings.currentAlpha) + "\n")
+        threading.Timer(5, PaintSettings.printAlpha).start()
 
     @staticmethod
     def selectRectangle():

@@ -8,6 +8,7 @@ from factories.paint_settings import PaintSettings
 from factories.pen_factory import PenFactory
 from factories.tool_factory import ToolFactory
 from eye_tracker.mouse_emulator import MouseEmulator
+import threading
 
 """Class provides area for painting"""
 class Canvas(QFrame):
@@ -23,12 +24,34 @@ class Canvas(QFrame):
         self.setMouseTracking(True)
         self.setGeometry(0, 0, width, height)
         self.setMinimumSize(width, height - 100)
+        self.initImage()
 
     def paintEvent(self, e):
         qp = QPainter()
+
         qp.begin(self)
-        self.field.draw(qp)
+
+        if self.mainWindow.image is not None:
+            qp.drawImage(QPoint(0, 0), self.mainWindow.image, QRect(*(0, 0, self.mainWindow.width, self.mainWindow.height)), Qt.AutoColor)
+        self.field.draw(qp, PaintSettings.currentAlpha)
+
         qp.end()
+
+    def initImage(self):
+        h = 400
+        w = 400
+        self.image = QImage(w, h, QImage.Format_RGB32)
+        self.path = QPainterPath()
+        self.clearImage()
+
+    def clearImage(self):
+        self.path = QPainterPath()
+        self.image.fill(Qt.white)
+        self.field.clear()
+        self.update()
+
+    def saveImage(self, fileName, fileFormat):
+        self.image.save(fileName, fileFormat)
 
     def mouseMoveEvent(self, e):
         MouseEmulator.mouseMoveEventCanvas(e, self.mainWindow)
@@ -67,11 +90,18 @@ class Canvas(QFrame):
             brush = QBrush()
             brush.setStyle(Qt.NoBrush)
         elif e.button() == Qt.RightButton:
+            PaintSettings.setAlpha(10)
+
+            PaintSettings.currentColor.setAlpha(PaintSettings.currentAlpha)
             brush = QBrush(PaintSettings.currentColor)
 
         return brush
 
     def mouseReleaseEvent(self, e):
         self.field.onRelease(Vertex(e.x(), e.y()))
+
+    def saveCanvas(self, name):
+        pixmap = self.grab()
+        pixmap.save(name, "PNG")
 
 

@@ -8,8 +8,8 @@ class Rectangle(Primitive):
         self.width = 0
         self.height = 0
 
-    def draw(self, canvas):
-        Primitive.draw(self, canvas)
+    def draw(self, canvas, alpha):
+        Primitive.draw(self, canvas, alpha)
 
         canvas.drawRect(
             self.position.x,

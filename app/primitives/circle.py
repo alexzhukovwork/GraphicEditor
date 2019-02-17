@@ -6,8 +6,8 @@ class Circle(Primitive):
         Primitive.__init__(self, position, 2, color, qPen, qBrush)
         self.radius = 0
 
-    def draw(self, canvas):
-        Primitive.draw(self, canvas)
+    def draw(self, canvas, alpha):
+        Primitive.draw(self, canvas, alpha)
         canvas.drawEllipse(
             self.position.x - self.radius / 2,
             self.position.y - self.radius / 2,

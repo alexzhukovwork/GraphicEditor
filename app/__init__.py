@@ -4,6 +4,7 @@ from widgets.window import Window
 from PyQt5.QtWidgets import *
 import time
 from eye_tracker.mouse_emulator import MouseEmulator
+from factories.paint_settings import PaintSettings
 
 
 def exceptHook(cls, exception, traceback):
@@ -24,6 +25,8 @@ if __name__ == '__main__':
     w = Window(QDesktopWidget().availableGeometry().width(), QDesktopWidget().availableGeometry().height())
     w.show()
 
+
+    threading.Timer(5, PaintSettings.printAlpha).start()
     #  t = threading.Thread(target=mouse)
     # t.daemon = True
     # t.start()

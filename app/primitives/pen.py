@@ -6,8 +6,8 @@ class Pen(Primitive):
         Primitive.__init__(self, position, -1, color, qPen, qBrush)
         self.pixels = []
 
-    def draw(self, canvas):
-        Primitive.draw(self, canvas)
+    def draw(self, canvas, alpha):
+        Primitive.draw(self, canvas, alpha)
 
         len = self.pixels.__len__() - 1
 

@@ -7,8 +7,8 @@ class Line(Primitive):
         Primitive.__init__(self, position, 2, color, qPen, qBrush)
         self.secondP = position
 
-    def draw(self, canvas):
-        Primitive.draw(self, canvas)
+    def draw(self, canvas, alpha):
+        Primitive.draw(self, canvas, alpha)
         canvas.drawLine(
             self.position.x,
             self.position.y,

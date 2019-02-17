@@ -6,9 +6,12 @@ class Field:
         self.objects = []
         self.currentObject = None
 
-    def draw(self, canvas):
+    def draw(self, canvas, alpha):
         for o in self.objects:
-            o.draw(canvas)
+            o.draw(canvas, alpha)
+
+    def clear(self):
+        self.objects.clear()
 
     def addObject(self, o):
         self.objects.append(o)
