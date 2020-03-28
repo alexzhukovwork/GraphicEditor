@@ -1,5 +1,5 @@
 from exceptions.objects_count_error import ObjectsCountError
-
+from primitives.pen import Pen
 """Class contains all primitives which are on the canvas"""
 class Field:
     def __init__(self):

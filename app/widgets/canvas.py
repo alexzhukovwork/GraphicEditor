@@ -1,3 +1,4 @@
+from PyQt5 import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -9,6 +10,8 @@ from factories.pen_factory import PenFactory
 from factories.tool_factory import ToolFactory
 from eye_tracker.mouse_emulator import MouseEmulator
 import threading
+
+from primitives.pen import Pen
 
 """Class provides area for painting"""
 class Canvas(QFrame):
@@ -36,6 +39,7 @@ class Canvas(QFrame):
         self.field.draw(qp, PaintSettings.currentAlpha)
 
         qp.end()
+
 
     def initImage(self):
         h = 400
@@ -78,6 +82,8 @@ class Canvas(QFrame):
                     brush
                 )
 
+            self.recognizePrimitive = primitive
+
             self.field.addObject(
                 primitive
             )
@@ -99,6 +105,30 @@ class Canvas(QFrame):
 
     def mouseReleaseEvent(self, e):
         self.field.onRelease(Vertex(e.x(), e.y()))
+
+        if type(self.recognizePrimitive) == Pen:
+
+            pixels = self.recognizePrimitive.get_pixels()
+
+            len = pixels.__len__() - 1
+
+            for i in range(0, len):
+                current = pixels[i]
+                next = pixels[i + 1]
+                print(current.x, current.y, next.x, next.y)
+
+            qp = QPainter()
+
+            qp.begin(self)
+
+            if self.mainWindow.image is not None:
+                qp.drawImage(QPoint(0, 0), self.mainWindow.image,
+                             QRect(*(0, 0, self.mainWindow.width, self.mainWindow.height)), Qt.AutoColor)
+            self.recognizePrimitive.draw(qp, PaintSettings.currentAlpha)
+
+            qp.end()
+
+            self.saveCanvas("test.png")
 
     def saveCanvas(self, name):
         pixmap = self.grab()

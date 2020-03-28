@@ -1,4 +1,3 @@
-from PyQt5.QtWidgets import *
 from widgets.window_view import WindowView
 
 """Callbacks for main window"""

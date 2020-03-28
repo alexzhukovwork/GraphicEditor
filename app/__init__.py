@@ -1,7 +1,9 @@
 import sys
 import threading
 from widgets.window import Window
+
 from PyQt5.QtWidgets import *
+
 import time
 from eye_tracker.mouse_emulator import MouseEmulator
 from factories.paint_settings import PaintSettings

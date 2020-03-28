@@ -1,0 +1,30 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyStubPackagesAdvertiser" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="PyQt5" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="app.widgets.canvas.QImage" />
+          <option value="app.widgets.canvas.QPainterPath" />
+          <option value="app.widgets.canvas.QBrush" />
+          <option value="app.widgets.canvas.QFrame" />
+          <option value="app.widgets.canvas.QRect" />
+          <option value="app.widgets.canvas.QPoint" />
+          <option value="app.widgets.canvas.QPainter" />
+          <option value="app.widgets.canvas.factories" />
+          <option value="app.widgets.canvas.field" />
+          <option value="app.widgets.canvas.helpers" />
+          <option value="app.widgets.canvas.eye_tracker" />
+          <option value="PyQt5.Qt" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
