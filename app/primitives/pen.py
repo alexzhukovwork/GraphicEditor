@@ -22,6 +22,9 @@ class Pen(Primitive):
     def get_pixels(self):
         return self.pixels
 
+    def set_pixels(self, pixels):
+        self.pixels = pixels
+
     def click(self, p):
         self.canChange = True
 

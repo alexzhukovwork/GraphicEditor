@@ -1,4 +1,3 @@
-from PyQt5 import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -12,6 +11,13 @@ from eye_tracker.mouse_emulator import MouseEmulator
 import threading
 
 from primitives.pen import Pen
+
+import numpy as np
+from PIL import Image
+import cv2
+
+import classifier.predict as predicter
+
 
 """Class provides area for painting"""
 class Canvas(QFrame):
@@ -40,7 +46,6 @@ class Canvas(QFrame):
 
         qp.end()
 
-
     def initImage(self):
         h = 400
         w = 400
@@ -60,8 +65,8 @@ class Canvas(QFrame):
     def mouseMoveEvent(self, e):
         MouseEmulator.mouseMoveEventCanvas(e, self.mainWindow)
         self.field.onMove(Vertex(e.x(), e.y()))
-        self.paintEvent(e)
-        self.update()
+     #   self.paintEvent(e)
+     #   self.update()
 
     def mousePressEvent(self, e):
 
@@ -92,14 +97,14 @@ class Canvas(QFrame):
 
     @staticmethod
     def _createBrush(e):
-        if e.button() == Qt.LeftButton:
-            brush = QBrush()
-            brush.setStyle(Qt.NoBrush)
-        elif e.button() == Qt.RightButton:
-            PaintSettings.setAlpha(10)
+      #  if e.button() == Qt.LeftButton:
+        brush = QBrush()
+        brush.setStyle(Qt.NoBrush)
+    #    elif e.button() == Qt.RightButton:
+     #       PaintSettings.setAlpha(10)
 
-            PaintSettings.currentColor.setAlpha(PaintSettings.currentAlpha)
-            brush = QBrush(PaintSettings.currentColor)
+   #         PaintSettings.currentColor.setAlpha(PaintSettings.currentAlpha)
+    #        brush = QBrush(PaintSettings.currentColor)
 
         return brush
 
@@ -107,31 +112,109 @@ class Canvas(QFrame):
         self.field.onRelease(Vertex(e.x(), e.y()))
 
         if type(self.recognizePrimitive) == Pen:
-
             pixels = self.recognizePrimitive.get_pixels()
 
             len = pixels.__len__() - 1
 
+            minX = 1920
+            maxX = 0
+            minY = 1080
+            maxY = 0
+
+            for i in range(0, len):
+                current = pixels[i]
+
+                if current.x < minX:
+                    minX = current.x
+                if current.x > maxX:
+                    maxX = current.x
+                if current.y < minY:
+                    minY = current.y
+                if current.y > maxY:
+                    maxY = current.y
+
+
+            width = maxX - minX
+            height = maxY - minY
+
+            # Create a black image
+            img = np.zeros((height + 10, width + 10, 3), np.uint8)
+            img[:, :] = (255, 255, 255)
+
             for i in range(0, len):
                 current = pixels[i]
                 next = pixels[i + 1]
-                print(current.x, current.y, next.x, next.y)
+                img = cv2.line(img, (current.x - minX + 5, current.y - minY + 5),
+                               (next.x - minX + 5, next.y - minY + 5), (0, 0, 0), 5)
 
-            qp = QPainter()
 
-            qp.begin(self)
+            image_path = "classifier/t.png"
+            cv2.imwrite(image_path, img)
 
-            if self.mainWindow.image is not None:
-                qp.drawImage(QPoint(0, 0), self.mainWindow.image,
-                             QRect(*(0, 0, self.mainWindow.width, self.mainWindow.height)), Qt.AutoColor)
-            self.recognizePrimitive.draw(qp, PaintSettings.currentAlpha)
+            self.onPredict(predicter.predict(image_path), minX, minY, width, height)
 
-            qp.end()
-
-            self.saveCanvas("test.png")
+        #    print("start " + str(minX) + " " + str(minY))
+        #    print("finish " + str(maxX) + " " + str(maxY))
+        #    print(str(width) + " " + str(height))
 
     def saveCanvas(self, name):
         pixmap = self.grab()
         pixmap.save(name, "PNG")
+
+    def drawCircle(self, x, y, width, height):
+        print("Circle")
+        self.drawCustom(ToolFactory.CIRCLE, x, y)
+        self.field.onClick(Vertex(x, y))
+        self.field.onMove(Vertex(x + width, y + height))
+        self.field.onClick(Vertex(x + width, y + height))
+
+    def drawRectangle(self, x, y,  width, height):
+        print("Rectangle")
+        self.drawCustom(ToolFactory.RECTANGLE, x, y)
+        self.field.onClick(Vertex(x, y))
+        self.field.onMove(Vertex(x + width, y + height))
+        self.field.onClick(Vertex(x + width, y + height))
+
+    def drawTriangle(self, x, y, width, height):
+        print("Triangle")
+        self.drawCustom(ToolFactory.TRIANGLE, x, y+ height)
+        self.field.onClick(Vertex(x, y + height))
+        self.field.onMove(Vertex(x + width, y + height))
+        self.field.onClick(Vertex(x + width, y + height))
+        self.field.onMove(Vertex(x + width / 2, y))
+        self.field.onClick(Vertex(x + width / 2, y))
+        self.paintEvent(None)
+        self.update()
+
+    def onPredict(self, predictable, x, y, width, height):
+        self.field.removeObject(self.recognizePrimitive)
+
+        if predictable == "Rectangle":
+            self.drawRectangle(x, y, width, height)
+        elif predictable == "Circle":
+            self.drawCircle(x, y, width, height)
+        elif predictable == "Triangle":
+            self.drawTriangle(x, y, width, height)
+
+    def drawCustom(self, id, x, y):
+        primitiveId = id
+        color = PaintSettings.currentColor
+        color.setAlpha(PaintSettings.currentAlpha)
+        point = Vertex(x, y)
+        pen = PenFactory.createPen(PaintSettings.penId)
+        brush = self._createBrush(None)
+
+        primitive = \
+            ToolFactory.createPrimitive(
+                primitiveId,
+                point,
+                color,
+                pen,
+                brush
+            )
+
+        self.field.addObject(
+            primitive
+        )
 
 

@@ -17,6 +17,12 @@ class Field:
         self.objects.append(o)
         self.currentObject = self.objects[-1]
 
+    def removeObject(self, o):
+        self.objects.remove(o)
+
+
+        #self.currentObject = self.objects[-1]
+
     def haveCurrentChanging(self):
         if self.currentObject is not None:
             return self.currentObject.isChange()
