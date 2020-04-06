@@ -50,7 +50,7 @@ class WindowView(QMainWindow):
         toolContainerWidth = self.width * 0.07
         toolContainerHeight = self.height
 
-        self.tools = self.__createTools(toolContainerWidth, self.width * 0.035)
+        self.tools = self.__createTools(toolContainerWidth, toolContainerWidth * 0.45)
         self.fileTools = self.__createFileTools(toolContainerWidth, self.width * 0.035)
 
 
@@ -195,6 +195,11 @@ class WindowView(QMainWindow):
                 width, height,
                 self.onClickItem(PaintSettings.selectBrush),
                 QtGui.QIcon(QtGui.QPixmap("../resources/brush.png"))
+            ),
+            WidgetItem(
+                width, height,
+                self.onClickItem(PaintSettings.selectSmartPen),
+                QtGui.QIcon(QtGui.QPixmap("../resources/smartPen.png"))
             ),
             WidgetItem(
                 width, height,

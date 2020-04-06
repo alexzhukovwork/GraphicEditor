@@ -3,6 +3,7 @@ from primitives.rectangle import Rectangle
 from primitives.triangle import Triangle
 from primitives.pen import Pen
 from primitives.line import Line
+from primitives.smart_pen import SmartPen
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 
@@ -22,6 +23,7 @@ class ToolFactory:
     PEN = 4
     LINE = 5
     ERASER = 6
+    SMART_PEN = 7
 
     @staticmethod
     def createPrimitive(id, p, color, qPen, qBrush):
@@ -31,7 +33,8 @@ class ToolFactory:
             ToolFactory.TRIANGLE: Triangle(p, color, qPen, qBrush),
             ToolFactory.PEN: Pen(p, color, qPen, qBrush),
             ToolFactory.LINE: Line(p, color, qPen, qBrush),
-            ToolFactory.ERASER: Pen(p, Qt.white, qPen, qBrush)
+            ToolFactory.ERASER: Pen(p, Qt.white, qPen, qBrush),
+            ToolFactory.SMART_PEN: SmartPen(p, color, qPen, qBrush)
         }[id]
 
 

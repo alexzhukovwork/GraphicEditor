@@ -10,7 +10,7 @@ from factories.tool_factory import ToolFactory
 from eye_tracker.mouse_emulator import MouseEmulator
 import threading
 
-from primitives.pen import Pen
+from primitives.smart_pen import SmartPen
 
 import numpy as np
 from PIL import Image
@@ -19,7 +19,6 @@ import cv2
 import datetime
 
 import classifier.predict as predicter
-
 
 """Class provides area for painting"""
 class Canvas(QFrame):
@@ -68,8 +67,6 @@ class Canvas(QFrame):
     def mouseMoveEvent(self, e):
         MouseEmulator.mouseMoveEventCanvas(e, self.mainWindow)
         self.field.onMove(Vertex(e.x(), e.y()))
-     #   self.paintEvent(e)
-     #   self.update()
 
     def mousePressEvent(self, e):
 
@@ -100,21 +97,15 @@ class Canvas(QFrame):
 
     @staticmethod
     def _createBrush(e):
-      #  if e.button() == Qt.LeftButton:
         brush = QBrush()
         brush.setStyle(Qt.NoBrush)
-    #    elif e.button() == Qt.RightButton:
-     #       PaintSettings.setAlpha(10)
-
-   #         PaintSettings.currentColor.setAlpha(PaintSettings.currentAlpha)
-    #        brush = QBrush(PaintSettings.currentColor)
 
         return brush
 
     def mouseReleaseEvent(self, e):
         self.field.onRelease(Vertex(e.x(), e.y()))
 
-        if type(self.recognizePrimitive) == Pen:
+        if type(self.recognizePrimitive) == SmartPen:
             pixels = self.recognizePrimitive.get_pixels()
 
             len = pixels.__len__() - 1

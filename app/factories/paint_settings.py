@@ -34,7 +34,7 @@ class PaintSettings:
             + " Time: "
             + str(datetime.datetime.now().time())
             + " alpha: " + str(PaintSettings.currentAlpha) + "\n")
-        threading.Timer(5, PaintSettings.printAlpha).start()
+       # threading.Timer(5, PaintSettings.printAlpha).start()
 
     @staticmethod
     def selectRectangle():
@@ -69,3 +69,8 @@ class PaintSettings:
     @staticmethod
     def selectLine():
         PaintSettings.primitiveId = ToolFactory.LINE
+
+    @staticmethod
+    def selectSmartPen():
+        PaintSettings.primitiveId = ToolFactory.SMART_PEN
+        PaintSettings.penId = PenFactory.SIMPLE_PEN

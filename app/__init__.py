@@ -28,7 +28,7 @@ if __name__ == '__main__':
     w.show()
 
 
-    threading.Timer(5, PaintSettings.printAlpha).start()
+  #  threading.Timer(5, PaintSettings.printAlpha).start()
     #  t = threading.Thread(target=mouse)
     # t.daemon = True
     # t.start()
