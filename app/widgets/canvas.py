@@ -16,6 +16,8 @@ import numpy as np
 from PIL import Image
 import cv2
 
+import datetime
+
 import classifier.predict as predicter
 
 
@@ -34,6 +36,7 @@ class Canvas(QFrame):
         self.setGeometry(0, 0, width, height)
         self.setMinimumSize(width, height - 100)
         self.initImage()
+        self.increment = 0
 
     def paintEvent(self, e):
         qp = QPainter()
@@ -147,8 +150,8 @@ class Canvas(QFrame):
                 img = cv2.line(img, (current.x - minX + 5, current.y - minY + 5),
                                (next.x - minX + 5, next.y - minY + 5), (0, 0, 0), 5)
 
-
-            image_path = "classifier/t.png"
+          #  self.increment += 1
+            image_path = "classifier/" + str(self.increment) + ".png"
             cv2.imwrite(image_path, img)
 
             self.onPredict(predicter.predict(image_path), minX, minY, width, height)

@@ -51,14 +51,14 @@ class MouseEmulator:
         except:
             print("Failed")
 
-        MouseEmulator.firstTimer.timeout.connect(mainWindow.setupFirstCursor)
-        MouseEmulator.firstTimer.start(300)
+   #     MouseEmulator.firstTimer.timeout.connect(mainWindow.setupFirstCursor)
+   #     MouseEmulator.firstTimer.start(300)
 
-        MouseEmulator.secondTimer.timeout.connect(mainWindow.setupSecondCursor)
-        MouseEmulator.secondTimer.start(600)
+   #     MouseEmulator.secondTimer.timeout.connect(mainWindow.setupSecondCursor)
+   #     MouseEmulator.secondTimer.start(600)
 
-        MouseEmulator.thirdTimer.timeout.connect(MouseEmulator.clickMouseAt)
-        MouseEmulator.thirdTimer.start(600)
+   #     MouseEmulator.thirdTimer.timeout.connect(MouseEmulator.clickMouseAt)
+   #     MouseEmulator.thirdTimer.start(600)
 
     @staticmethod
     def mouseMoveEventCanvas(e, mainWindow):
@@ -73,18 +73,18 @@ class MouseEmulator:
         except:
             print("Failed")
 
-        MouseEmulator.firstTimer.timeout.connect(mainWindow.setupFirstCursor)
-        MouseEmulator.firstTimer.start(300)
+   #     MouseEmulator.firstTimer.timeout.connect(mainWindow.setupFirstCursor)
+   #     MouseEmulator.firstTimer.start(300)
 
-        MouseEmulator.secondTimer.timeout.connect(mainWindow.setupSecondCursor)
-        MouseEmulator.secondTimer.start(600)
+    #    MouseEmulator.secondTimer.timeout.connect(mainWindow.setupSecondCursor)
+    #    MouseEmulator.secondTimer.start(600)
 
-        if not MouseEmulator.down:
-            MouseEmulator.thirdTimer.timeout.connect(MouseEmulator.downMouseAt)
-        else:
-            MouseEmulator.thirdTimer.timeout.connect(MouseEmulator.upMouseAt)
+   #     if not MouseEmulator.down:
+    #        MouseEmulator.thirdTimer.timeout.connect(MouseEmulator.downMouseAt)
+   #     else:
+   #         MouseEmulator.thirdTimer.timeout.connect(MouseEmulator.upMouseAt)
 
-        MouseEmulator.thirdTimer.start(600)
+    #    MouseEmulator.thirdTimer.start(600)
 
 
 

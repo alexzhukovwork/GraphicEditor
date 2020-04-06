@@ -47,32 +47,25 @@ class WindowView(QMainWindow):
         self.win.setStyleSheet("background-color:rgb(200,209,222);")
         self.win.setWindowTitle("PyQt")
 
-        self.tools = self.__createTools(self.width * 0.03)
-        self.fileTools = self.__createFileTools(self.width * 0.03)
         toolContainerWidth = self.width * 0.07
         toolContainerHeight = self.height
 
+        self.tools = self.__createTools(toolContainerWidth, self.width * 0.035)
+        self.fileTools = self.__createFileTools(toolContainerWidth, self.width * 0.035)
+
+
         currentColor = PaletteItem(
-            toolContainerWidth * 0.4,
-            toolContainerWidth * 0.4,
+            toolContainerWidth,
+            toolContainerWidth * 0.5,
             None,
             PaintSettings.currentColor
-        )
-
-        colorCurrentContainer = self.__createToolContainer(
-            QHBoxLayout(),
-            toolContainerWidth,
-            toolContainerWidth,
-            [
-                currentColor
-            ]
         )
 
         paletteItems = []
         for palette in PaletteFactory.createPalette(PaintSettings.paletteId):
             paletteItems.append(PaletteItem(
-                toolContainerWidth * 0.2,
-                toolContainerWidth * 0.2,
+                toolContainerWidth * 1,
+                toolContainerWidth * 0.25,
                 None,
                 palette,
                 currentColor
@@ -82,21 +75,14 @@ class WindowView(QMainWindow):
             QVBoxLayout(),
             0,
             0,
-            paletteItems[0:int(len(paletteItems) / 2)]
+            paletteItems
         )
 
-        colorLayoutSecondColumn = self.__createToolContainer(
+        colorCurrentContainer = self.__createToolContainer(
             QVBoxLayout(),
-            0,
-            0,
-            paletteItems[int(len(paletteItems) / 2):len(paletteItems) + 1]
-        )
-
-        colorLayout = self.__createToolContainer(
-            QHBoxLayout(),
             toolContainerWidth,
-            toolContainerWidth,
-            [colorLayoutFirstColumn, colorLayoutSecondColumn]
+            toolContainerHeight,
+            [currentColor]
         )
 
         self.canvas = self.__createCanvas(self.width * 0.93, self.height)
@@ -107,14 +93,14 @@ class WindowView(QMainWindow):
             0,
             self.width,
             self.height,
-            (10, 10, 10, 30),
+            (10, 10, 0, 0),
             [
                 self.canvas,
                 self.__createToolContainer(
                     QVBoxLayout(),
                     toolContainerWidth,
                     toolContainerHeight,
-                    self.tools + [colorCurrentContainer] + [colorLayout] + self.fileTools,
+                    self.tools + [colorCurrentContainer] + [colorLayoutFirstColumn] + self.fileTools,
 
                 )
             ]
@@ -153,7 +139,7 @@ class WindowView(QMainWindow):
             self
         )
 
-        layout.setContentsMargins(0, 10, 0, 30)
+        layout.setContentsMargins(0, 10, 0, -5)
 
         toolContainer.setWidgets(
             layout,
@@ -178,40 +164,40 @@ class WindowView(QMainWindow):
 
         return sliderContainer
 
-    def __createTools(self, size):
+    def __createTools(self, width, height):
         tools = [
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectRectangle),
                 QtGui.QIcon(QtGui.QPixmap("../resources/rectangle.png"))
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectTriangle),
                 QtGui.QIcon(QtGui.QPixmap("../resources/triangle.png"))
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectCircle),
                 QtGui.QIcon(QtGui.QPixmap("../resources/circle.png"))
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectLine),
                 QtGui.QIcon(QtGui.QPixmap("../resources/line.png"))
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectPen),
                 QtGui.QIcon(QtGui.QPixmap("../resources/pen.png"))
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectBrush),
                 QtGui.QIcon(QtGui.QPixmap("../resources/brush.png"))
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.onClickItem(PaintSettings.selectEraser),
                 QtGui.QIcon(QtGui.QPixmap("../resources/eraser.png"))
             ),
@@ -222,16 +208,16 @@ class WindowView(QMainWindow):
 
         return tools
 
-    def __createFileTools(self, size):
+    def __createFileTools(self, width, height):
         tools = [
             WidgetItem(
-                size, size,
+                width, height,
                 self.saveImage,
                 QtGui.QIcon(QtGui.QPixmap("../resources/save.png")),
                 True
             ),
             WidgetItem(
-                size, size,
+                width, height,
                 self.openFileNameDialog,
                 QtGui.QIcon(QtGui.QPixmap("../resources/open.png")),
                 True
